@@ -6,21 +6,28 @@ import { ForGettingCityGeolocationInterface } from '../ports/ForGettingCityGeolo
 export class ForGettingCityGeolacationAdapter
     implements ForGettingCityGeolocationInterface
 {
-    async getCityGeolocation(city: string): Promise<CityGeolocationInterface> {
+    async getCityGeolocation(
+        city: string,
+        countryCode: string,
+    ): Promise<CityGeolocationInterface> {
         try {
-            const response = await axios.get<{
-                lat: number
-                lon: number
-            }>(
-                `${process.env.GEOLOCATION_BASE_API_URL}?q=${city}&appid=${process.env.API_KEY}`,
+            const response = await axios.get<
+                [
+                    {
+                        lat: number
+                        lon: number
+                    },
+                ]
+            >(
+                `${process.env.GEOLOCATION_BASE_API_URL}?q=${city},${countryCode}&limit=1&appid=${process.env.API_KEY}`,
             )
 
-            if (response.status === 200) {
+            if (response.status === 200 && response.data.length > 0) {
                 return {
                     success: true,
                     data: {
-                        latitude: response.data.lat,
-                        longitude: response.data.lon,
+                        lat: response.data[0].lat,
+                        lon: response.data[0].lon,
                     },
                 }
             }
