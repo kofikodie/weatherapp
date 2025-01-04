@@ -1,6 +1,8 @@
 import express, { Request, Response } from 'express'
 import { ForConfiguringWeatherParams } from './driving/ports/ForConfiguringWeatherParams.Interface'
+import Configurator from './domain/Configurator'
 import { ForGettingCityGeolacationAdapter } from './driven/adapters/ForGettingCityGeolacationAdapter'
+import { ForGettingCityForcastAdapter } from './driven/adapters/ForGettingCityForcastAdapter'
 
 const app = express()
 
@@ -17,8 +19,20 @@ app.get(
         res: Response,
     ) => {
         const { city } = req.query
-        res.send({
-            city,
+
+        const forGettingCityGeolocationAdapter =
+            new ForGettingCityGeolacationAdapter()
+        const forGettingCityForcastAdapter = new ForGettingCityForcastAdapter()
+        const configurator = new Configurator(
+            forGettingCityForcastAdapter,
+            forGettingCityGeolocationAdapter,
+        )
+        const result = await configurator.getFiveDaysForecast(city)
+
+        res.status(result.status).send({
+            status: result.status,
+            data: result.data,
+            context: result.context,
         })
     },
 )

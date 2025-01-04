@@ -17,7 +17,10 @@ export class ForGettingCityForcastAdapter
                 `${process.env.FORECAST_BASE_API_URL}?lat=${lat}&lon=${lon}&appid=${process.env.FORECAST_API_KEY}&units=metric&cnt=5`,
             )
 
-            if (response.status === 200 ) {
+            if (
+                response.status === 200 &&
+                (response.data.list?.length ?? 0) > 0
+            ) {
                 return {
                     success: true,
                     data: response.data.list?.map(item => ({

@@ -8,7 +8,6 @@ export class ForGettingCityGeolacationAdapter
 {
     async getCityGeolocation(
         city: string,
-        countryCode: string,
     ): Promise<CityGeolocationInterface> {
         try {
             const response = await axios.get<
@@ -19,10 +18,21 @@ export class ForGettingCityGeolacationAdapter
                     },
                 ]
             >(
-                `${process.env.GEOLOCATION_BASE_API_URL}?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
+                `${process.env.GEOLOCATION_BASE_API_URL}?q=${city}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
 
             if (response.status === 200 && response.data.length > 0) {
+                if (
+                    response.data[0].lat === undefined ||
+                    response.data[0].lon === undefined
+                ) {
+                    console.log('City not found', response.data)
+                    return {
+                        success: false,
+                        error: new Error('City not found'),
+                    }
+                }
+
                 return {
                     success: true,
                     data: {
@@ -34,7 +44,9 @@ export class ForGettingCityGeolacationAdapter
 
             return {
                 success: false,
-                error: new Error('Error getting city geolocation'),
+                error: new Error(
+                    'Error getting forecast for city. Verify the city name and country code',
+                ),
             }
         } catch (error) {
             return {

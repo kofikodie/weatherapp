@@ -5,11 +5,10 @@ describe('ForGettingCityGeolacationAdapter', () => {
     it('should return the city geolocation when the city is valid', async () => {
         process.env.GEO_API_KEY = '1234567890'
         const city = 'London'
-        const countryCode = 'GB'
 
         nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
             .get(
-                `?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
+                `?q=${city}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
             .reply(200, [
                 {
@@ -25,7 +24,7 @@ describe('ForGettingCityGeolacationAdapter', () => {
             ])
 
         const adapter = new ForGettingCityGeolacationAdapter()
-        const result = await adapter.getCityGeolocation(city, countryCode)
+        const result = await adapter.getCityGeolocation(city)
 
         expect(result).toBeDefined()
         expect(result.success).toBe(true)
@@ -38,11 +37,10 @@ describe('ForGettingCityGeolacationAdapter', () => {
     it('should return an error when the api key is not valid', async () => {
         process.env.GEO_API_KEY = 'not-valid-api-key'
         const city = 'London'
-        const countryCode = 'GB'
 
         nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
             .get(
-                `?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
+                `?q=${city}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
             .reply(401, {
                 cod: 401,
@@ -51,7 +49,7 @@ describe('ForGettingCityGeolacationAdapter', () => {
             })
 
         const adapter = new ForGettingCityGeolacationAdapter()
-        const result = await adapter.getCityGeolocation(city, countryCode)
+        const result = await adapter.getCityGeolocation(city)
 
         expect(result.error).toBeDefined()
         expect(result.success).toBe(false)
@@ -63,39 +61,64 @@ describe('ForGettingCityGeolacationAdapter', () => {
     it('should return an empty object when the city is not found', async () => {
         process.env.GEO_API_KEY = '1234567890'
         const city = 'Not-Found'
-        const countryCode = 'GB'
 
         nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
             .get(
-                `?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
+                `?q=${city}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
             .reply(200, [])
 
         const adapter = new ForGettingCityGeolacationAdapter()
-        const result = await adapter.getCityGeolocation(city, countryCode)
+        const result = await adapter.getCityGeolocation(city)
 
         expect(result.data).toBeUndefined()
         expect(result.success).toBe(false)
         expect(result.error).toBeDefined()
-        expect(result.error?.message).toBe('Error getting city geolocation')
+        expect(result.error?.message).toBe(
+            'Error getting forecast for city. Verify the city name and country code',
+        )
     })
 
     it('should return an error when weather api is down', async () => {
         process.env.GEO_API_KEY = '1234567890'
         const city = 'London'
-        const countryCode = 'GB'
 
         nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
             .get(
-                `?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
+                `?q=${city}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
             .reply(500)
 
         const adapter = new ForGettingCityGeolacationAdapter()
-        const result = await adapter.getCityGeolocation(city, countryCode)
+        const result = await adapter.getCityGeolocation(city)
 
         expect(result.error).toBeDefined()
         expect(result.success).toBe(false)
-        expect(result.error?.message).toBe('Request failed with status code 500')
+        expect(result.error?.message).toBe(
+            'Request failed with status code 500',
+        )
+    })
+
+    it('should return an error when the latitude or longitude is not defined', async () => {
+        process.env.GEO_API_KEY = '1234567890'
+        const city = 'London'
+
+        nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
+            .get(
+                `?q=${city}&limit=1&appid=${process.env.GEO_API_KEY}`,
+            )
+            .reply(200, [
+                {
+                    name: 'London',
+                    country: 'GB',
+                    state: 'England',
+                },
+            ])
+
+        const adapter = new ForGettingCityGeolacationAdapter()
+        const result = await adapter.getCityGeolocation(city)
+
+        expect(result.success).toBe(false)
+        expect(result.error?.message).toBe('City not found')
     })
 })

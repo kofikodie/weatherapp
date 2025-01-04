@@ -13,6 +13,7 @@ export interface CityForcastDataInterface {
     description: string
     temp: Temp
     date: Date
+    context?: string
 }
 
 export interface ClientResponseForecastInterface {
