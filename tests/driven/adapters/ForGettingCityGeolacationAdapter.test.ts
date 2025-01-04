@@ -3,13 +3,13 @@ import nock from 'nock'
 
 describe('ForGettingCityGeolacationAdapter', () => {
     it('should return the city geolocation when the city is valid', async () => {
-        process.env.API_KEY = '1234567890'
+        process.env.GEO_API_KEY = '1234567890'
         const city = 'London'
         const countryCode = 'GB'
 
         nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
             .get(
-                `?q=${city},${countryCode}&limit=1&appid=${process.env.API_KEY}`,
+                `?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
             .reply(200, [
                 {
@@ -36,13 +36,13 @@ describe('ForGettingCityGeolacationAdapter', () => {
     })
 
     it('should return an error when the api key is not valid', async () => {
-        process.env.API_KEY = 'not-valid-api-key'
+        process.env.GEO_API_KEY = 'not-valid-api-key'
         const city = 'London'
         const countryCode = 'GB'
 
         nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
             .get(
-                `?q=${city},${countryCode}&limit=1&appid=${process.env.API_KEY}`,
+                `?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
             .reply(401, {
                 cod: 401,
@@ -61,13 +61,13 @@ describe('ForGettingCityGeolacationAdapter', () => {
     })
 
     it('should return an empty object when the city is not found', async () => {
-        process.env.API_KEY = '1234567890'
+        process.env.GEO_API_KEY = '1234567890'
         const city = 'Not-Found'
         const countryCode = 'GB'
 
         nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
             .get(
-                `?q=${city},${countryCode}&limit=1&appid=${process.env.API_KEY}`,
+                `?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
             .reply(200, [])
 
@@ -81,13 +81,13 @@ describe('ForGettingCityGeolacationAdapter', () => {
     })
 
     it('should return an error when weather api is down', async () => {
-        process.env.API_KEY = '1234567890'
+        process.env.GEO_API_KEY = '1234567890'
         const city = 'London'
         const countryCode = 'GB'
 
         nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
             .get(
-                `?q=${city},${countryCode}&limit=1&appid=${process.env.API_KEY}`,
+                `?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
             .reply(500)
 

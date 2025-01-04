@@ -19,7 +19,7 @@ export class ForGettingCityGeolacationAdapter
                     },
                 ]
             >(
-                `${process.env.GEOLOCATION_BASE_API_URL}?q=${city},${countryCode}&limit=1&appid=${process.env.API_KEY}`,
+                `${process.env.GEOLOCATION_BASE_API_URL}?q=${city},${countryCode}&limit=1&appid=${process.env.GEO_API_KEY}`,
             )
 
             if (response.status === 200 && response.data.length > 0) {
