@@ -35,7 +35,7 @@ describe('Configurator', () => {
                                 eve: 25,
                                 morn: 12,
                             },
-                            date: new Date(),
+                            date: '2025-01-01',
                         },
                     ],
                 },
@@ -52,43 +52,27 @@ describe('Configurator', () => {
             expect(result.data?.[0]).toHaveProperty('date')
         })
 
-        it('should return an error if longitude or latitude is not found', async () => {
-            jest.spyOn(
-                geolocationAdapter,
-                'getCityGeolocation',
-            ).mockResolvedValueOnce({
-                success: false,
-                error: new Error('City not found'),
-            })
-
-            const result = await configurator.getFiveDaysForecast('London')
-
-            expect(result.status).toBe(400)
-            expect(result.data).toBeUndefined()
-            expect(result.context).toBe('City not found')
-        })
-
-        it('should return an error if the city is not found', async () => {
+        it('should return an error if the city is not found if latitude and longitude coordinates are not found', async () => {
             jest.spyOn(
                 geolocationAdapter,
                 'getCityGeolocation',
             ).mockResolvedValueOnce({
                 success: false,
                 error: new Error(
-                    'Error getting forecast for city. Verify the city name and country code',
+                    'Error getting forecast for city. Verify the city name.',
                 ),
             })
 
-            const result = await configurator.getFiveDaysForecast('London')
+            const result = await configurator.getFiveDaysForecast('Not-found-city')
 
             expect(result.status).toBe(400)
             expect(result.data).toBeUndefined()
             expect(result.context).toBe(
-                'Error getting forecast for city. Verify the city name and country code',
+                'Error getting forecast for city. Verify the city name.',
             )
         })
 
-        it('should return an error if the forecast is not found', async () => {
+        it('should return an error if getting city forecast fails given a valid latitude and longitude coordinates', async () => {
             jest.spyOn(
                 geolocationAdapter,
                 'getCityGeolocation',

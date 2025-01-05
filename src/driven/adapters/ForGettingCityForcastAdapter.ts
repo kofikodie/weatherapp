@@ -27,7 +27,7 @@ export class ForGettingCityForcastAdapter
                         main: item.weather?.[0]?.main ?? '',
                         description: item.weather?.[0]?.description ?? '',
                         temp: item.temp,
-                        date: new Date(item.dt * 1000),
+                        date: new Date(item.dt * 1000).toISOString(),
                     })),
                 }
             }

@@ -75,7 +75,7 @@ describe('ForGettingCityGeolacationAdapter', () => {
         expect(result.success).toBe(false)
         expect(result.error).toBeDefined()
         expect(result.error?.message).toBe(
-            'Error getting forecast for city. Verify the city name and country code',
+            'Error getting forecast for city. Verify the city name.',
         )
     })
 

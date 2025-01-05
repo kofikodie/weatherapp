@@ -218,10 +218,7 @@ describe('ForGettingCityForcastAdapter', () => {
             morn: 1.24,
             night: 1.53,
         })
-        expect(result.data?.[0].date).toBeInstanceOf(Date)
-        expect(result.data?.[0].date.toISOString()).toBe(
-            '2025-01-04T11:00:00.000Z',
-        )
+        expect(result.data?.[0].date).toBe('2025-01-04T11:00:00.000Z')
 
         expect(result.data?.[1].main).toBe('Clouds')
         expect(result.data?.[1].description).toBe('overcast clouds')
@@ -233,9 +230,7 @@ describe('ForGettingCityForcastAdapter', () => {
             morn: 1.75,
             night: 5.27,
         })
-        expect(result.data?.[1].date.toISOString()).toBe(
-            '2025-01-05T11:00:00.000Z',
-        )
+        expect(result.data?.[1].date).toBe('2025-01-05T11:00:00.000Z')
 
         expect(result.data?.[2].main).toBe('Rain')
         expect(result.data?.[2].description).toBe('light rain')
@@ -247,21 +242,15 @@ describe('ForGettingCityForcastAdapter', () => {
             morn: 5.22,
             night: 7.46,
         })
-        expect(result.data?.[2].date.toISOString()).toBe(
-            '2025-01-06T11:00:00.000Z',
-        )
+        expect(result.data?.[2].date).toBe('2025-01-06T11:00:00.000Z')
 
         expect(result.data?.[3].main).toBe('Rain')
         expect(result.data?.[3].description).toBe('moderate rain')
-        expect(result.data?.[3].date.toISOString()).toBe(
-            '2025-01-07T11:00:00.000Z',
-        )
+        expect(result.data?.[3].date).toBe('2025-01-07T11:00:00.000Z')
 
         expect(result.data?.[4].main).toBe('Rain')
         expect(result.data?.[4].description).toBe('light rain')
-        expect(result.data?.[4].date.toISOString()).toBe(
-            '2025-01-08T11:00:00.000Z',
-        )
+        expect(result.data?.[4].date).toBe('2025-01-08T11:00:00.000Z')
     })
 
     it('should return an error when the api returns an error', async () => {

@@ -6,6 +6,7 @@
     "tsc": "tsc",
     "start:dev": "nodemon --watch src --ext ts -L --exec npm run ts-start",
     "test": "jest --runInBand --forceExit --config jest.config.json ./tests",
+    "test:e2e": "jest --runInBand --forceExit --config jest.config.json ./tests/app.e2e.test.ts",
     "ts-start": "ts-node src/index.ts",
     "lint": "eslint \"src/**/*.{ts,js}\" \"tests/**/*.{ts,js}\" --fix",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts)\""

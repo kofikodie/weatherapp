@@ -12,7 +12,7 @@ export interface CityForcastDataInterface {
     main: string
     description: string
     temp: Temp
-    date: Date
+    date: string
     context?: string
 }
 

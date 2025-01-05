@@ -58,5 +58,24 @@ describe('E2E Test', () => {
                 },
             ],
         })
+
+        nock.cleanAll()
+    })
+
+    it('should return 400 when requesting weather with an invalid city', async () => {
+        const city = 'Madrid'
+        process.env.GEO_API_KEY = '1234567890'
+        process.env.FORECAST_API_KEY = '1234567890'
+
+        nock(`${process.env.GEOLOCATION_BASE_API_URL}`)
+            .get(`?q=${city}&limit=1&appid=${process.env.GEO_API_KEY}`)
+            .reply(200, [])
+
+        const response = await request(app).get(`/weather?city=${city}`)
+        expect(response.status).toBe(400)
+        expect(response.body).toEqual({
+            status: 400,
+            context: 'Error getting forecast for city. Verify the city name.',
+        })
     })
 })
