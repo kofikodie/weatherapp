@@ -43,7 +43,6 @@ describe('Configurator', () => {
 
             const result = await configurator.getFiveDaysForecast('London')
 
-            // Assert
             expect(result.status).toBe(200)
             expect(result.data).toBeDefined()
             expect(result.data?.[0]).toHaveProperty('main')
